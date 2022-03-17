@@ -164,7 +164,7 @@ def does_account_exist_view(request):
         data = {}
         try:
             user = User.objects.get(email=email)
-            data['response'] = email
+            data['response'] = user
         except User.DoesNotExist:
             data['response'] = "User does not exist"
         return Response(data)
@@ -251,16 +251,16 @@ class WorkOrderViewSet(viewsets.ModelViewSet):
 class WorkOrderListView(ListAPIView):
     serializer_class = WorkOrderSerializer
     authentication_classes = (TokenAuthentication,)
-    permission_classes = (IsAuthenticated,)
-    pagination_class = PageNumberPagination
+    permission_classes = ()
+    pagination_class = None
     filter_backends = (SearchFilter, OrderingFilter)
     search_fields = ('title', 'description', 'created_by__username')
 
     def get_queryset(self):
-        return WorkOrder.objects.all().filter(assigned_to=self.request.user).exclude(status__in=['COMPLETED','CANCELLED'])
+        return WorkOrder.objects.all().exclude(status__in=['COMPLETED','CANCELLED'])
     
 @api_view(['GET', ])
-@permission_classes((IsAuthenticated, ))
+@permission_classes(())
 def detail_work_order(request, pk):
 
 	try:

@@ -28,6 +28,9 @@ class WorkOrder(models.Model):
         self.updated_at = datetime.now()
         return super(WorkOrder, self).save(*args, **kwargs)  
     
+    def __str__(self):
+        return self.title
+    
     class Meta:
         verbose_name = 'Work order'
         verbose_name_plural = 'Work orders'
